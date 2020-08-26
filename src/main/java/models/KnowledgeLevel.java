@@ -1,0 +1,5 @@
+package models;
+
+public enum KnowledgeLevel {
+    BEGINNER, PRE_INTERMEDIATE, INTERMEDIATE, UPPER_INTERMEDIATE, ADVANCED
+}
