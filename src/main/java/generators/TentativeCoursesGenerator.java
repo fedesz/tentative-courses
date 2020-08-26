@@ -48,13 +48,9 @@ public class TentativeCoursesGenerator {
         if (optionalFirstStudent.isPresent()) {
             Student firstStudent = optionalFirstStudent.get();
             Course course = new Course(teacher, schedule);
-            course.setKnowledgeLevel(firstStudent.getKnowledgeLevel());
-            course.setModality(firstStudent.getCourseModality());
             course.addNewStudent(firstStudent);
 
-            possibleStudents.stream()
-                    .filter(course::accomplishConditions)
-                    .forEach(course::addNewStudent);
+            possibleStudents.forEach(course::addNewStudent);
             return course;
         }
         return null;

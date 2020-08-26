@@ -36,9 +36,12 @@ class TentativeCoursesGeneratorTest extends Specification {
         Student student2 = new Student("Juan Gomez", CourseModality.GROUP, KnowledgeLevel.BEGINNER, [new Schedule(DayOfWeek.MONDAY, "12:30")])
         Student student3 = new Student("Juan Gomez", CourseModality.GROUP, KnowledgeLevel.BEGINNER, [new Schedule(DayOfWeek.MONDAY, "12:30")])
         Student student4 = new Student("Juan Gomez", CourseModality.GROUP, KnowledgeLevel.BEGINNER, [new Schedule(DayOfWeek.MONDAY, "12:30")])
-        Student student5 = new Student("Juan Gomez", CourseModality.GROUP, KnowledgeLevel.BEGINNER, [new Schedule(DayOfWeek.MONDAY, "12:30")])
-        Student student6 = new Student("Juan Gomez", CourseModality.GROUP, KnowledgeLevel.ADVANCED, [new Schedule(DayOfWeek.MONDAY, "12:30")])
-        Student student7 = new Student("Juan Gomez", CourseModality.GROUP, KnowledgeLevel.BEGINNER, [new Schedule(DayOfWeek.MONDAY, "12:31")])
-        [student, student1, student2, student3, student4, student5, student6, student7]
+        Student student5 = new Student("Juan Gomez", CourseModality.GROUP, KnowledgeLevel.BEGINNER, [new Schedule(DayOfWeek.MONDAY, "12:32")])
+        Student student6 = new Student("Juan Gomez", CourseModality.GROUP, KnowledgeLevel.BEGINNER, [new Schedule(DayOfWeek.MONDAY, "12:30")])
+        Student student7 = new Student("Juan Gomez", CourseModality.GROUP, KnowledgeLevel.BEGINNER, [new Schedule(DayOfWeek.MONDAY, "12:33"),
+                                                                                                     new Schedule(DayOfWeek.MONDAY, "12:30")])
+        Student student8 = new Student("Juan Gomez", CourseModality.GROUP, KnowledgeLevel.ADVANCED, [new Schedule(DayOfWeek.MONDAY, "12:30")])
+        Student student9 = new Student("Juan Gomez", CourseModality.GROUP, KnowledgeLevel.BEGINNER, [new Schedule(DayOfWeek.MONDAY, "12:31")])
+        [student, student1, student2, student3, student4, student5, student6, student7, student8, student9]
     }
 }

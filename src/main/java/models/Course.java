@@ -1,7 +1,5 @@
 package models;
 
-import exceptions.FullCourseException;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,8 +59,13 @@ public class Course {
     }
 
     public void addNewStudent(Student newStudent) {
-        boolean canAddStudent = validateCourseAvailability();
+        boolean canAddStudent = validateCourseAvailability() && accomplishConditions(newStudent);
         if (canAddStudent) {
+            if (students.isEmpty()) {
+                setKnowledgeLevel(newStudent.getKnowledgeLevel());
+                setModality(newStudent.getCourseModality());
+            }
+
             this.students.add(newStudent);
             newStudent.setHasCourse(true);
         }
@@ -71,6 +74,7 @@ public class Course {
     public boolean accomplishConditions(Student student) {
         return !student.hasCourse() && student.getCourseModality().equals(modality) && student.getKnowledgeLevel().equals(knowledgeLevel);
     }
+
     private boolean validateCourseAvailability() {
         return this.students.size() < this.maxCapacity;
     }
