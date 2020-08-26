@@ -3,7 +3,7 @@ package models;
 import java.util.List;
 
 public class Teacher {
-    private String name;
+    private final String name;
     private List<Schedule> availableDays;
 
     public Teacher(String name, List<Schedule> availableDays) {

@@ -132,6 +132,32 @@ class TentativeCoursesGeneratorTest extends Specification {
         assert students == tentativeCoursesGenerator.rejectedStudents
     }
 
+    def "If there is only one possible group course and 8 candidates for the same course, the generator should reject 2 candidates"() {
+        given:
+        def schedule = new Schedule(DayOfWeek.TUESDAY, "12:30")
+        List<Teacher> teachers = [new Teacher("The teacher", [schedule])]
+        List<Student> students = [
+                new Student("Juan Gomez", CourseModality.GROUP, KnowledgeLevel.BEGINNER, [new Schedule(DayOfWeek.TUESDAY, "12:30")]),
+                new Student("Pedro Gonzalez", CourseModality.GROUP, KnowledgeLevel.BEGINNER, [new Schedule(DayOfWeek.TUESDAY, "12:30")]),
+                new Student("Anibal Moreno", CourseModality.GROUP, KnowledgeLevel.BEGINNER, [new Schedule(DayOfWeek.TUESDAY, "12:30")]),
+                new Student("Jose Montoto", CourseModality.GROUP, KnowledgeLevel.BEGINNER, [new Schedule(DayOfWeek.TUESDAY, "12:30")]),
+                new Student("Juan Lopez", CourseModality.GROUP, KnowledgeLevel.BEGINNER, [new Schedule(DayOfWeek.TUESDAY, "12:30")]),
+                new Student("Alberto Fernandez", CourseModality.GROUP, KnowledgeLevel.BEGINNER, [new Schedule(DayOfWeek.TUESDAY, "12:30")]),
+                new Student("Esteban Quito", CourseModality.GROUP, KnowledgeLevel.BEGINNER, [new Schedule(DayOfWeek.TUESDAY, "12:30")]),
+                new Student("Elena Nito", CourseModality.GROUP, KnowledgeLevel.BEGINNER, [new Schedule(DayOfWeek.TUESDAY, "12:30")]),
+        ]
+
+        when:
+        def courses = tentativeCoursesGenerator.generateTentativeCourses(teachers, students)
+        def rejectedStudents = tentativeCoursesGenerator.rejectedStudents
+
+        then:
+        assert courses.size() == 1
+        assert courses[0].students.size() == 6
+        assert schedule == courses[0].schedule
+        assert rejectedStudents.size() == 2
+    }
+
     private List<Teacher> mockTeachers() {
         Teacher teacher = new Teacher("Maria Gomez", [new Schedule(DayOfWeek.MONDAY, "12:30")])
         Teacher teacher1 = new Teacher("Maria Perez", [new Schedule(DayOfWeek.MONDAY, "12:30")])
