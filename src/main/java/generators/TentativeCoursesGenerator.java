@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class TentativeCoursesGenerator {
+    private List<Course> tentativeCourses;
     private List<Student> rejectedStudents;
 
     public List<Student> getRejectedStudents() {
@@ -15,7 +16,7 @@ public class TentativeCoursesGenerator {
     }
 
     public List<Course> generateTentativeCourses(List<Teacher> teachers, List<Student> students) {
-        final List<Course> tentativeCourses = new ArrayList<>();
+        tentativeCourses = new ArrayList<>();
         teachers.forEach(teacher -> {
             if (thereAreUnassignedStudents(students)) {
                 teacher.getAvailableDays()
@@ -34,23 +35,26 @@ public class TentativeCoursesGenerator {
     }
 
     private Course createCourse(Teacher teacher, Schedule schedule, List<Student> students) {
-        final List<Student> possibleStudents = students.stream()
-                .filter(student ->
-                        !student.hasCourse() && (student.getCourseModality().equals(CourseModality.GROUP) && student.getAvailableDays().stream().anyMatch(schedule::differsByAnHour))
-                                || (student.getAvailableDays().contains(schedule))
-                )
-                .collect(Collectors.toList());
+        final List<Student> possibleStudents = filterPossibleStudents(schedule, students);
 
-        final Optional<Student> optionalFirstStudent = possibleStudents.stream().findAny();
-        if (optionalFirstStudent.isPresent()) {
-            Student firstStudent = optionalFirstStudent.get();
+        if (!possibleStudents.isEmpty()) {
             Course course = new Course(teacher, schedule);
-            course.addNewStudent(firstStudent);
-
             possibleStudents.forEach(course::addNewStudent);
             return course;
         }
         return null;
+    }
+
+    private List<Student> filterPossibleStudents(Schedule schedule, List<Student> students) {
+        return students.stream()
+                .filter(student ->
+                        !student.hasCourse() && (validateStudentGroupModalityAndScheduleDifferingByAnHour(schedule, student)
+                                || student.getAvailableDays().contains(schedule))
+                ).collect(Collectors.toList());
+    }
+
+    private boolean validateStudentGroupModalityAndScheduleDifferingByAnHour(Schedule schedule, Student student) {
+        return student.getCourseModality().equals(CourseModality.GROUP) && student.getAvailableDays().stream().anyMatch(schedule::differsByAnHour);
     }
 
     private boolean thereAreUnassignedStudents(List<Student> students) {
