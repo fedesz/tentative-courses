@@ -1,12 +1,13 @@
 package models;
 
-import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
-import java.util.Date;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 public class Schedule {
     private final DayOfWeek dayOfWeek;
-    private final Date hour;
+    private final LocalTime hour;
 
     public Schedule(DayOfWeek dayOfWeek, String hour) {
         this.dayOfWeek = validatePossibleDay(dayOfWeek);
@@ -17,8 +18,22 @@ public class Schedule {
         return dayOfWeek;
     }
 
-    public Date getHour() {
+    public LocalTime getHour() {
         return hour;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Schedule)) return false;
+        Schedule schedule = (Schedule) o;
+        return dayOfWeek == schedule.dayOfWeek &&
+                Objects.equals(hour, schedule.hour);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(dayOfWeek, hour);
     }
 
     private DayOfWeek validatePossibleDay(DayOfWeek dayOfWeek) {
@@ -28,9 +43,9 @@ public class Schedule {
         throw new IllegalArgumentException("You must enter a day between Monday and Friday");
     }
 
-    private Date validatePossibleHour(String hour) {
+    private LocalTime validatePossibleHour(String hour) {
         try {
-            return new SimpleDateFormat("hh:mm").parse(hour);
+            return LocalTime.parse(hour, DateTimeFormatter.ofPattern("HH:mm"));
         } catch (Exception e) {
             throw new IllegalArgumentException("You must enter a valid hour format");
         }

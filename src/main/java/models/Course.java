@@ -13,12 +13,9 @@ public class Course {
     private final List<Student> students;
     private int maxCapacity;
 
-    public Course(Teacher teacher, CourseModality modality, KnowledgeLevel knowledgeLevel, Schedule schedule) {
+    public Course(Teacher teacher, Schedule schedule) {
         this.teacher = teacher;
-        this.modality = modality;
-        this.knowledgeLevel = knowledgeLevel;
         this.schedule = schedule;
-        this.maxCapacity = modality.getMaxCapacity();
         this.students = new ArrayList<>();
     }
 
@@ -28,6 +25,7 @@ public class Course {
 
     public void setModality(CourseModality modality) {
         this.modality = modality;
+        this.maxCapacity = modality.getMaxCapacity();
     }
 
     public void setKnowledgeLevel(KnowledgeLevel knowledgeLevel) {
@@ -63,17 +61,17 @@ public class Course {
     }
 
     public void addNewStudent(Student newStudent) {
-        validateCourseAvailability();
-        this.students.add(newStudent);
-    }
-    
-    private void validateCourseAvailability() {
-        if (isFull()) {
-            throw new FullCourseException("This course is full, the student will be rejected.");
+        boolean canAddStudent = validateCourseAvailability();
+        if (canAddStudent) {
+            this.students.add(newStudent);
+            newStudent.setHasCourse(true);
         }
     }
-    
-    private boolean isFull() {
+
+    public boolean accomplishConditions(Student student) {
+        return !student.hasCourse() && student.getCourseModality().equals(modality) && student.getKnowledgeLevel().equals(knowledgeLevel);
+    }
+    private boolean validateCourseAvailability() {
         return this.students.size() < this.maxCapacity;
     }
 }
