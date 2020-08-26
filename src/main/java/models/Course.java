@@ -59,20 +59,22 @@ public class Course {
     }
 
     public void addNewStudent(Student newStudent) {
-        boolean canAddStudent = validateCourseAvailability() && accomplishConditions(newStudent);
-        if (canAddStudent) {
+        if (accomplishConditions(newStudent)) {
+            //to attach to the first student the course modality and knowledge
             if (students.isEmpty()) {
                 setKnowledgeLevel(newStudent.getKnowledgeLevel());
                 setModality(newStudent.getCourseModality());
             }
 
-            this.students.add(newStudent);
-            newStudent.setHasCourse(true);
+            if (validateCourseAvailability()) {
+                this.students.add(newStudent);
+                newStudent.setHasCourse(true);
+            }
         }
     }
 
     public boolean accomplishConditions(Student student) {
-        return !student.hasCourse() && student.getCourseModality().equals(modality) && student.getKnowledgeLevel().equals(knowledgeLevel);
+        return !student.hasCourse() && ((modality == null && knowledgeLevel == null) || student.getCourseModality().equals(modality) && student.getKnowledgeLevel().equals(knowledgeLevel));
     }
 
     private boolean validateCourseAvailability() {

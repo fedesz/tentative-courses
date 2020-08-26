@@ -1,9 +1,6 @@
 package generators;
 
-import models.Course;
-import models.Schedule;
-import models.Student;
-import models.Teacher;
+import models.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,9 +9,6 @@ import java.util.stream.Collectors;
 
 public class TentativeCoursesGenerator {
     private List<Student> rejectedStudents;
-
-    public TentativeCoursesGenerator() {
-    }
 
     public List<Student> getRejectedStudents() {
         return rejectedStudents;
@@ -41,7 +35,10 @@ public class TentativeCoursesGenerator {
 
     private Course createCourse(Teacher teacher, Schedule schedule, List<Student> students) {
         final List<Student> possibleStudents = students.stream()
-                .filter(student -> !student.hasCourse() && student.getAvailableDays().contains(schedule))
+                .filter(student ->
+                        !student.hasCourse() && (student.getCourseModality().equals(CourseModality.GROUP) && student.getAvailableDays().stream().anyMatch(schedule::differsByAnHour))
+                                || (student.getAvailableDays().contains(schedule))
+                )
                 .collect(Collectors.toList());
 
         final Optional<Student> optionalFirstStudent = possibleStudents.stream().findAny();

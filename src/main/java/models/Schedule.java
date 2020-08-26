@@ -1,8 +1,11 @@
 package models;
 
+import exceptions.OutOfRangeHourException;
+
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Objects;
 
 public class Schedule {
@@ -44,10 +47,26 @@ public class Schedule {
     }
 
     private LocalTime validatePossibleHour(String hour) {
+        LocalTime formattedHour;
         try {
-            return LocalTime.parse(hour, DateTimeFormatter.ofPattern("HH:mm"));
-        } catch (Exception e) {
-            throw new IllegalArgumentException("You must enter a valid hour format");
+            formattedHour = LocalTime.parse(hour, DateTimeFormatter.ofPattern("HH:mm"));
+        } catch (DateTimeParseException ex) {
+            throw new IllegalArgumentException("You must enter a correct format for the schedule hour, eg: HH:mm");
         }
+
+        if (!hourIsBetweenLimits(formattedHour)) {
+            throw new OutOfRangeHourException("You must enter an hour between 9 and 19");
+        }
+
+        return formattedHour;
+    }
+
+    public boolean differsByAnHour(Schedule otherSchedule) {
+        LocalTime scheduleHour = otherSchedule.getHour();
+        return Math.abs(hour.getHour() - scheduleHour.getHour()) == 1 && hour.getMinute() == scheduleHour.getMinute();
+    }
+
+    private boolean hourIsBetweenLimits(LocalTime hour) {
+        return hour.getHour() >= 9 && hour.getHour() <= 19;
     }
 }
