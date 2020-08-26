@@ -63,7 +63,7 @@ public class Schedule {
 
     public boolean differsByAnHour(Schedule otherSchedule) {
         LocalTime scheduleHour = otherSchedule.getHour();
-        return Math.abs(hour.getHour() - scheduleHour.getHour()) == 1 && hour.getMinute() == scheduleHour.getMinute();
+        return dayOfWeek.equals(otherSchedule.dayOfWeek) && Math.abs(hour.getHour() - scheduleHour.getHour()) == 1 && hour.getMinute() == scheduleHour.getMinute();
     }
 
     private boolean hourIsBetweenLimits(LocalTime hour) {
